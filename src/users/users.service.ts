@@ -31,36 +31,24 @@ export class UsersService {
       });
 
       if (!hasUser) {
-        const salt: any = await bcrypt.genSalt(10);
-        credentials.senha = await bcrypt.hash(credentials.senha, salt);
-
-        let user = new this.userModel({
-          nome: credentials.nome,
-          senha: credentials.senha,
-          cpf: credentials.cpf
-        });
-
-        await user.save();
+        let newUser = await this.userModel.create(credentials);
         res.status(201).json({
-          error:false,
-          user:{
-            id:user.id,
-            nome:user.nome,
-            cpf:user.cpf,
-            updatedAt:user.updatedAt,
-            createdAt:user.createdAt
+          error: false,
+          user: {
+            id: newUser.id,
+            nome: newUser.nome,
+            cpf: newUser.cpf,
+            updatedAt: newUser.updatedAt,
+            createdAt: newUser.createdAt
 
           }
         });
-        
       }
       else {
         res.status(400).json({
           error: "CPF já existente"
         });
       }
-
-      // return await this.userModel.create(credentials as any);
     }
 
 
@@ -69,54 +57,90 @@ export class UsersService {
 
   findAll() {
     return this.userModel.findAll({
-      attributes:['id', 'nome', 'cpf', 'updatedAt', 'createdAt']
+      attributes: ['id', 'nome', 'cpf', 'updatedAt', 'createdAt']
     });
   }
 
-  findOne(id: number) {
-    return this.userModel.findByPk(id);
-  }
+  async findOne(id: number, @Res() res) {
+    let user = await this.userModel.findByPk(id, {
+      attributes:['id', 'nome', 'cpf', 'updatedAt', 'createdAt']
+    });
 
-  async update(id: number, updateUserDto: UpdateUserDto, @Res() res) {
-
-    //validando campos enviados pelo request body
-    if (updateUserDto.nome && updateUserDto.cpf && updateUserDto.senha) {
-      let user = await this.userModel.findByPk(id);
-
-      //verificando se usuário existe
-      if (user) {
-        user.update({
-          nome: updateUserDto.nome,
-          senha: updateUserDto.senha,
-          cpf: updateUserDto.cpf
-        });
-        res.json({
-          error: false,
-          user
-        })
-      }
-      else {
-        res.status(404).json({
-          error: true,
-          msg: 'User not Found'
-        });
-      }
+    if (!user) {
+      res.status(404).json({
+        error: 'true',
+        msg: 'user not found'
+      });
     }
-    else {
-      res.status(422).json({
-        error: true,
-        msg: 'Invalid data'
+
+    else{
+      res.json({
+        error: false,
+        user
       });
     }
   }
 
-  async remove(id: number, @Res() res) {
+  async update(id: number, updateUserDto: UpdateUserDto, @Res() res) {
+
     let user = await this.userModel.findByPk(id);
-    user.destroy();
+    if (!user) {
+      res.status(404).json({
+        error: 'true',
+        msg: 'user not found'
+      });
+    }
+
+    //caso sejam enviados valores nulos na request..
+    if (updateUserDto.nome === null) {
+      updateUserDto.nome = user.nome;
+    }
+
+    if (updateUserDto.senha === null) {
+      updateUserDto.senha = user.senha;
+    }
+
+    // if(updateUserDto.cpf === null){
+    //   updateUserDto.cpf = user.cpf;
+    // }
+
+    user.update({
+      nome: updateUserDto.nome,
+      senha: updateUserDto.senha,
+      // cpf:updateUserDto.cpf
+    });
 
     res.json({
       error: false,
-      msg: `User id ${id} deleted`
+      user: {
+        id: user.id,
+        nome: user.nome,
+        cpf: user.cpf,
+        updatedAt: user.updatedAt,
+        createdAt: user.createdAt
+      }
     });
+
+
+  }
+
+  async remove(id: number, @Res() res) {
+    let user = await this.userModel.findByPk(id);
+
+    if (!user) {
+      res.status(404).json({
+        error: 'true',
+        msg: 'user not found'
+      });
+    }
+    else {
+      user.destroy();
+
+      res.json({
+        error: false,
+        msg: `User id ${id} deleted`
+      });
+    }
+
   }
 }

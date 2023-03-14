@@ -10,6 +10,8 @@ export class ValidateCPF implements ValidatorConstraintInterface {
         var Soma;
         var Resto;
         Soma = 0;
+
+      if (typeof strCPF !== 'string') return false;
       if (strCPF == "00000000000") return false;
     
       for (let i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
