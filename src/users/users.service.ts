@@ -17,20 +17,27 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto, @Res() res) {
     // await bcrypt.loadSynchronized();
-    if (createUserDto.nome && createUserDto.cpf && createUserDto.senha) {
+    if (createUserDto.nome && createUserDto.cpf && createUserDto.senha && createUserDto.email) {
       let credentials = {
         nome: createUserDto.nome,
         senha: createUserDto.senha,
-        cpf: createUserDto.cpf
+        cpf: createUserDto.cpf,
+        email: createUserDto.email
       };
 
-      let hasUser = await this.userModel.findOne({
+      let hasUserByCPF = await this.userModel.findOne({
         where: {
           cpf: credentials.cpf
         }
       });
 
-      if (!hasUser) {
+      let hasUserByEmail = await this.userModel.findOne({
+        where:{
+          email: credentials.email
+        }
+      })
+
+      if (!hasUserByCPF && !hasUserByEmail) {
         let newUser = await this.userModel.create(credentials);
         res.status(201).json({
           error: false,
@@ -38,6 +45,7 @@ export class UsersService {
             id: newUser.id,
             nome: newUser.nome,
             cpf: newUser.cpf,
+            email: newUser.email,
             updatedAt: newUser.updatedAt,
             createdAt: newUser.createdAt
 
@@ -46,7 +54,7 @@ export class UsersService {
       }
       else {
         res.status(400).json({
-          error: "CPF já existente"
+          error: "CPF ou E-mail já existente"
         });
       }
     }
@@ -57,13 +65,13 @@ export class UsersService {
 
   findAll() {
     return this.userModel.findAll({
-      attributes: ['id', 'nome', 'cpf', 'updatedAt', 'createdAt']
+      attributes: ['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt']
     });
   }
 
   async findOne(id: number, @Res() res) {
     let user = await this.userModel.findByPk(id, {
-      attributes:['id', 'nome', 'cpf', 'updatedAt', 'createdAt']
+      attributes:['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt']
     });
 
     if (!user) {
@@ -116,6 +124,7 @@ export class UsersService {
         id: user.id,
         nome: user.nome,
         cpf: user.cpf,
+        email:user.email,
         updatedAt: user.updatedAt,
         createdAt: user.createdAt
       }

@@ -38,4 +38,11 @@ export class User extends Model {
         allowNull: false
     })
     cpf: string;
+
+    @Unique({name:'email_unico', msg:'O Email deve ser único na tabela users'})
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    email: string;
 }

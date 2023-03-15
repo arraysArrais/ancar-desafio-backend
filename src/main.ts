@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 // import { Sequelize } from 'sequelize-typescript';
 
@@ -16,6 +17,15 @@ async function bootstrap() {
   //   database: 'desafio_ancar',
   // });
   // await sequelize.sync({ force: true });
+
+  const config = new DocumentBuilder()
+    .setTitle('Desafio Ancar')
+    .setDescription('APIs para o backend do desafio Ancar')
+    .setVersion('1.0')
+    // .addTag('teste')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   await app.listen(3000);
 }
 bootstrap();

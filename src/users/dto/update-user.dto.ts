@@ -1,8 +1,44 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  validate,
+  validateOrReject,
+  Contains,
+  IsInt,
+  Length,
+  IsEmail,
+  IsFQDN,
+  IsDate,
+  Min,
+  Max,
+  IsString,
+  IsNumber,
+  MinLength,
+  MaxLength,
+  Validate,
+  IsDefined,
+} from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @ApiProperty({
+    description: 'Utilizado para representar o nome do usuário',
+    example: 'João Mesquita'
+  })
+  @Length(4, 30)
+  @IsString()
+  // @IsDefined()
   nome: any;
-  senha: any;
+
+  @ApiProperty({
+    description: 'A senha deve ter entre 8 e 20 caracteres',
+    example: '12345678',
+    required: true,
+    nullable: false,
+  })
+  @Length(8, 20)
+  @IsString()
+  // @IsDefined()
+  senha: string;
   // cpf: any;
 }
