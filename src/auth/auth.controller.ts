@@ -1,14 +1,15 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { IsPublic } from './decorators/is-public.decorator';
 import { LocalAuthGuard } from './guards/local-auth-guard';
 import { AuthRequest } from './models/AuthRequest';
 
 // @Controller('auth')
+@ApiTags('auth')
 @Controller()
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
-
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
@@ -19,7 +20,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     //ou seja, esse método só vai ser executado caso os dados enviados no payload da request estejam corretos (email & senha)
 
-    @IsPublic() //utilizando decorator personalizado para tornar a rota pública
+    @IsPublic() //utilizando decorator personalizado para bypassar jwt guard e tornar a rota pública
     login(@Request() req: AuthRequest) {
         return this.authService.login(req.user);
     }

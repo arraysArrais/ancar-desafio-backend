@@ -24,6 +24,7 @@ async function bootstrap() {
     .setDescription('APIs para o backend do desafio Ancar')
     .setVersion('1.0')
     // .addTag('teste')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
