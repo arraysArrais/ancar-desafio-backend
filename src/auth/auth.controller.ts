@@ -1,5 +1,5 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { IsPublic } from './decorators/is-public.decorator';
 import { LocalAuthGuard } from './guards/local-auth-guard';
@@ -11,6 +11,14 @@ import { AuthRequest } from './models/AuthRequest';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
+    @ApiBody({
+        schema: {
+            properties: {
+                'email': { type: 'string', example:"joao.mesquita@ancar.com.br" },
+                'password': { type: 'string', example:"12345678" }
+            }
+        }
+     })
     @Post('login')
     @HttpCode(HttpStatus.OK)
     //guardião para definir se a pessoa tem acesso ou não a esse endpoint

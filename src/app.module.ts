@@ -24,7 +24,7 @@ import { APP_GUARD } from '@nestjs/core';
     UsersModule,
     AuthModule
   ],
-  controllers: [AppController],
+  // controllers: [AppController],
   providers: [AppService, {
     //protegendo todas as rotas da aplicação com acesso via jwt token
     provide: APP_GUARD,
