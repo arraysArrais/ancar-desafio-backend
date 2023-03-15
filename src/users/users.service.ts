@@ -63,9 +63,14 @@ export class UsersService {
 
   }
 
-  findAll() {
+  async findAll(page: number = 1): Promise<User[]> {
+    const limit = 10;
+    const offset = (page - 1) * limit;
+  
     return this.userModel.findAll({
-      attributes: ['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt']
+      attributes: ['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt'],
+      offset,
+      limit,
     });
   }
 

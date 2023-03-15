@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 const bcrypt = require('bcrypt');
 
 @ApiTags('users')
@@ -25,9 +25,11 @@ export class UsersController {
     return this.usersService.create(createUserDto, res);
   }
 
+  // @ApiQuery({ name: 'page', required: false, type: Number })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @ApiQuery({ name: 'page', required: false })
+  findAll(@Query('page') page: number = 1) {
+    return this.usersService.findAll(page);
   }
 
   @Get(':id')
