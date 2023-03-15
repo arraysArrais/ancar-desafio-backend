@@ -1,4 +1,5 @@
-import { Table, Column, Model, Unique, DataType, BeforeCreate, BeforeUpdate } from 'sequelize-typescript';
+import { Table, Column, Model, Unique, DataType, BeforeCreate, BeforeUpdate, HasMany, } from 'sequelize-typescript';
+import { Questionario } from 'src/questionarios/entities/questionario.entity';
 const bcrypt = require('bcrypt');
 
 @Table({
@@ -44,4 +45,9 @@ export class User extends Model {
         allowNull: false
     })
     email: string;
+
+    //relacionamento entre user x questionario
+    //1 usuário pode ter n questionarios
+    @HasMany(()=> Questionario)
+    questionarios: Questionario[];
 }
