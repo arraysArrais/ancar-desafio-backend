@@ -31,7 +31,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   nome: any;
 
   @ApiProperty({
-    description: 'A senha deve ter entre 8 e 20 caracteres',
+    description: 'A password deve ter entre 8 e 20 caracteres',
     example: '12345678',
     required: true,
     nullable: false,
@@ -39,6 +39,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Length(8, 20)
   @IsString()
   // @IsDefined()
-  senha: string;
+  password: string;
   // cpf: any;
 }

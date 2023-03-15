@@ -23,13 +23,12 @@ export class User extends Model {
         allowNull: false
     })
     
-    senha: string;
+    password: string;
     @BeforeCreate
     @BeforeUpdate
     static async hashPass(instance: User){
-        const senha = instance.getDataValue('senha');
-        const salt: any = await bcrypt.genSalt(10);
-        instance.setDataValue('senha', await bcrypt.hash(senha, salt));
+        const password = instance.getDataValue('password');
+        instance.setDataValue('password', await bcrypt.hash(password, 10));
     }
 
     @Unique({name:'CPF_unico', msg:'O CPF deve ser único na tabela users'})

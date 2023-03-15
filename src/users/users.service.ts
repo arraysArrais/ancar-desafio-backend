@@ -17,10 +17,10 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto, @Res() res) {
     // await bcrypt.loadSynchronized();
-    if (createUserDto.nome && createUserDto.cpf && createUserDto.senha && createUserDto.email) {
+    if (createUserDto.nome && createUserDto.cpf && createUserDto.password && createUserDto.email) {
       let credentials = {
         nome: createUserDto.nome,
-        senha: createUserDto.senha,
+        password: createUserDto.password,
         cpf: createUserDto.cpf,
         email: createUserDto.email
       };
@@ -32,7 +32,7 @@ export class UsersService {
       });
 
       let hasUserByEmail = await this.userModel.findOne({
-        where:{
+        where: {
           email: credentials.email
         }
       })
@@ -71,7 +71,7 @@ export class UsersService {
 
   async findOne(id: number, @Res() res) {
     let user = await this.userModel.findByPk(id, {
-      attributes:['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt']
+      attributes: ['id', 'nome', 'cpf', 'email', 'updatedAt', 'createdAt']
     });
 
     if (!user) {
@@ -81,7 +81,7 @@ export class UsersService {
       });
     }
 
-    else{
+    else {
       res.json({
         error: false,
         user
@@ -104,8 +104,8 @@ export class UsersService {
       updateUserDto.nome = user.nome;
     }
 
-    if (updateUserDto.senha === null) {
-      updateUserDto.senha = user.senha;
+    if (updateUserDto.password === null) {
+      updateUserDto.password = user.password;
     }
 
     // if(updateUserDto.cpf === null){
@@ -114,7 +114,7 @@ export class UsersService {
 
     user.update({
       nome: updateUserDto.nome,
-      senha: updateUserDto.senha,
+      password: updateUserDto.password,
       // cpf:updateUserDto.cpf
     });
 
@@ -124,7 +124,7 @@ export class UsersService {
         id: user.id,
         nome: user.nome,
         cpf: user.cpf,
-        email:user.email,
+        email: user.email,
         updatedAt: user.updatedAt,
         createdAt: user.createdAt
       }
@@ -151,5 +151,14 @@ export class UsersService {
       });
     }
 
+  }
+
+  //auth method
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({
+      where: {
+        email: email
+      }
+    });
   }
 }
