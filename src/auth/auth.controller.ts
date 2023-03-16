@@ -30,6 +30,7 @@ export class AuthController {
 
     @IsPublic() //utilizando decorator personalizado para bypassar jwt guard e tornar a rota pública
     login(@Request() req: AuthRequest) {
+        // console.log(req.user);
         return this.authService.login(req.user);
     }
 }

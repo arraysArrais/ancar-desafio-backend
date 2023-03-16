@@ -8,12 +8,11 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth-guard';
 @Controller()
 @ApiBearerAuth()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
-  @Get('me')
-  // @UseGuards(JwtAuthGuard)
-  me(@Req() req){
-    const userId = req.user.userId;
-    console.log(userId);
+  @Get('/me')
+  getMe(@CurrentUser() currentUser: User) {
+    // console.log(currentUser);
+    return currentUser;
   }
 }

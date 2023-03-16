@@ -9,7 +9,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 @Module({
   imports: [UsersModule, JwtModule.register({
     secret: process.env.JWT_SECRET,
-    signOptions: {expiresIn: '1h'},
+    signOptions: {expiresIn: '30d'},
   })],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy] //sempre que tivermos um injectable, precisamos disponibilizá-lo num módulo.

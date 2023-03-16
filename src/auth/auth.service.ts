@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
+// import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { UserPayload } from './models/UserPayload';
-import { UserToken } from './models/UserToken';
+// import { UserPayload } from './models/UserPayload';
+// import { UserToken } from './models/UserToken';
 // import bcrypt from 'bcrypt';
 const bcrypt = require('bcrypt');
 
@@ -14,17 +14,10 @@ export class AuthService {
         private readonly jwtService: JwtService,
         ){}
 
-    login(user: User): UserToken {
-        //Transforma o user em JWT
-        const payload: UserPayload = {
-            sub: user.id,
-            email: user.email,
-            nome: user.nome,
-        };
-
-        const jwtToken = this.jwtService.sign(payload);
+    login(user: any): any {
+        console.log(user);
         return {
-            access_token: jwtToken
+            access_token: this.jwtService.sign({id:user.id, email:user.id})
         }
     }
     
@@ -34,6 +27,7 @@ export class AuthService {
         if(user){
             //batendo password enviada no payload da request com hash que está no banco
             let isPasswordValid = await bcrypt.compare(password, user.password);
+            // console.log(user);
 
             if(isPasswordValid){
                 return{
