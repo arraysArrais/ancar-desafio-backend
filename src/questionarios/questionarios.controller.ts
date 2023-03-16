@@ -5,7 +5,7 @@ import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
 import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 
-@ApiTags('questionario')
+@ApiTags('questionarios')
 @ApiBearerAuth()
 @Controller('questionarios')
 export class QuestionariosController {
