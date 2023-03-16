@@ -1,15 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateQuestionarioDto } from './dto/create-questionario.dto';
 import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
+import { Questionario } from './entities/questionario.entity';
 
 @Injectable()
 export class QuestionariosService {
+  constructor(
+    @InjectModel(Questionario)
+    private questionarioModel: typeof Questionario,
+  ) { }
+
   create(createQuestionarioDto: CreateQuestionarioDto) {
-    return 'This action adds a new questionario';
+    return 'olar'
   }
 
   findAll() {
-    return `This action returns all questionarios`;
+    return this.questionarioModel.findAll();
   }
 
   findOne(id: number) {

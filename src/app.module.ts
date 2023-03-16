@@ -27,7 +27,7 @@ import { Questionario } from './questionarios/entities/questionario.entity';
     AuthModule,
     QuestionariosModule
   ],
-  // controllers: [AppController],
+  controllers: [AppController],
   providers: [AppService, {
     //protegendo todas as rotas da aplicação com acesso via jwt token
     provide: APP_GUARD,

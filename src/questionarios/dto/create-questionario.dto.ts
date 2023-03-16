@@ -32,7 +32,7 @@ export class CreateQuestionarioDto {
         description: 'Descrição do formulário',
         example: 'Qual loja você gostaria de trazer para o Shopping Nova América?'
     })
-    @Length(4,60)
+    @Length(4,120)
     @IsString()
     @IsDefined()
     description: string;

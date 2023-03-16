@@ -19,7 +19,7 @@ export class AuthService {
         const payload: UserPayload = {
             sub: user.id,
             email: user.email,
-            name: user.nome,
+            nome: user.nome,
         };
 
         const jwtToken = this.jwtService.sign(payload);
@@ -41,6 +41,7 @@ export class AuthService {
                     password: undefined,
                 }
             }
+            
         }
         //Não encontrou usuário ou password inválida
         throw new Error('Email ou password incorretos');
