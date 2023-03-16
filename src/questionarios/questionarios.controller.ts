@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query } from '@nestjs/common';
 import { QuestionariosService } from './questionarios.service';
 import { CreateQuestionarioDto } from './dto/create-questionario.dto';
 import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
@@ -12,27 +12,28 @@ export class QuestionariosController {
   constructor(private readonly questionariosService: QuestionariosService) {}
 
   @Post()
-  create(@Body() createQuestionarioDto: CreateQuestionarioDto) {
-    return this.questionariosService.create(createQuestionarioDto);
+  create(@Body() createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
+    return this.questionariosService.create(createQuestionarioDto, res);
   }
 
+  @ApiQuery({ name: 'page', required: false })
   @Get()
-  findAll() {
-    return this.questionariosService.findAll();
+  findAll(@Query('page') page: number = 1) {
+    return this.questionariosService.findAll(page);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionariosService.findOne(+id);
+  findOne(@Param('id') id: string, @Res() res) {
+    return this.questionariosService.findOne(+id, res);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionarioDto: UpdateQuestionarioDto) {
-    return this.questionariosService.update(+id, updateQuestionarioDto);
+  update(@Param('id') id: string, @Body() updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
+    return this.questionariosService.update(+id, updateQuestionarioDto, res);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionariosService.remove(+id);
+  remove(@Param('id') id: string, @Res() res) {
+    return this.questionariosService.remove(+id, res);
   }
 }

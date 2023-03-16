@@ -37,4 +37,12 @@ export class CreateQuestionarioDto {
     @IsDefined()
     description: string;
 
+    @IsNumber()
+    @IsDefined()
+    @ApiProperty({
+        description: 'id do usuário para vincular a criação do formulário',
+        example: '1'
+    })
+    userId: number;
+
 }

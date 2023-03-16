@@ -33,5 +33,6 @@ import { Questionario } from './questionarios/entities/questionario.entity';
     provide: APP_GUARD,
     useClass: JwtAuthGuard
   }],
+  // exports:[AppService]
 })
 export class AppModule {}

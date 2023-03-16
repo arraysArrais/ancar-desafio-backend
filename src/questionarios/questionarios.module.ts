@@ -3,6 +3,7 @@ import { QuestionariosService } from './questionarios.service';
 import { QuestionariosController } from './questionarios.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Questionario } from './entities/questionario.entity';
+import { AppService } from 'src/app.service';
 
 @Module({
   imports:
@@ -15,7 +16,7 @@ import { Questionario } from './entities/questionario.entity';
       ),
     ],
   controllers: [QuestionariosController],
-  providers: [QuestionariosService],
+  providers: [QuestionariosService, AppService], 
   exports: [QuestionariosService]
 })
 export class QuestionariosModule {}
