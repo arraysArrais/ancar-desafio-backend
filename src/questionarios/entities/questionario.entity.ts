@@ -33,13 +33,5 @@ export class Questionario extends Model {
     user: User;
 
     @HasMany(() => Pergunta)
-    questions: Pergunta[];
-
-
-    // @Column({
-    //     type: DataType.DATE,
-    //     allowNull: false
-    // })
-    // date: Date;
-
+    perguntas: Pergunta[];
 }
