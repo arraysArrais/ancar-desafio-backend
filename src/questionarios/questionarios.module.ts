@@ -4,7 +4,6 @@ import { QuestionariosController } from './questionarios.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Questionario } from './entities/questionario.entity';
 import { AppService } from 'src/app.service';
-import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
 
 @Module({
   imports:
@@ -12,7 +11,6 @@ import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
       SequelizeModule.forFeature(
         [
           Questionario,
-          Pergunta
         ]
       ),
     ],

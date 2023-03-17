@@ -1,5 +1,4 @@
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
-import { Pergunta } from "src/perguntas/entities/pergunta.entity";
 import { User } from "src/users/entities/user.entity";
 
 @Table({
@@ -32,6 +31,12 @@ export class Questionario extends Model {
     @BelongsTo(() => User)
     user: User;
 
-    @HasMany(() => Pergunta)
-    perguntas: Pergunta[];
+    @Column({
+        type: DataType.JSON,
+        allowNull: false
+    })
+    perguntas: any;
+
+    // @HasMany(() => Pergunta)
+    // perguntas: Pergunta[];
 }

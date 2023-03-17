@@ -1,4 +1,3 @@
-import { CreatePerguntaDto } from 'src/perguntas/dto/create-pergunta.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import {validate,
     validateOrReject,
@@ -18,7 +17,7 @@ import {validate,
     IsDefined,
     IsArray,} from 'class-validator';
 import { Type } from 'class-transformer';
-import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
+import { Pergunta } from './pergunta.dto';
 
 
 export class CreateQuestionarioDto {
@@ -35,7 +34,7 @@ export class CreateQuestionarioDto {
 
     @ApiProperty({
         description: 'Descrição do formulário',
-        example: 'Das lojas abaixo, quais você gostaria de trazer para o Shopping Nova América?'
+        example: 'Pesquisa de satisfação do Shopping Nova América'
     })
     @Length(4,120)
     @IsString()
@@ -51,10 +50,10 @@ export class CreateQuestionarioDto {
     userId: number;
 
     @ApiProperty({
-        // type: ()=>[CreatePerguntaDto],
-        example:[{title:'Renner'}, {title:'Polo Wear'}, {title:'Brownieria'}]
-    })
+        example: [{ title: 'Quais Lojas você gostaria de ter no Shopping?' }, { title: 'O que poderiamos melhorar?' }, { title: 'Você recomenda o Shopping Nova América para amigos e familiares?' }],
+        type: [Object],
+      })
     @IsDefined()
     @IsArray()
-    perguntas: CreatePerguntaDto[];
+    perguntas: Pergunta[]
 }

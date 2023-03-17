@@ -5,7 +5,6 @@ import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
 import { Questionario } from './entities/questionario.entity';
 import { AppService } from '../app.service';
 import { User } from 'src/users/entities/user.entity';
-import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
 
 @Injectable()
 export class QuestionariosService {
@@ -13,58 +12,57 @@ export class QuestionariosService {
     @InjectModel(Questionario)
     private questionarioModel: typeof Questionario,
     private readonly appService: AppService,
-    @InjectModel(Pergunta)
-    private readonly perguntaModel: typeof Pergunta,
   ) { }
 
-  // async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
-  //   if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId) {
-  //     let newQuestionario = await this.questionarioModel.create({
-  //       name: createQuestionarioDto.name,
-  //       description: createQuestionarioDto.description,
-  //       userId: createQuestionarioDto.userId,
-  //     });
-
-  //     res.status(201).json({
-  //       error: false,
-  //       newQuestionario
-  //     })
-  //   }
-  // }
-
   async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
-    if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId && createQuestionarioDto.perguntas) {
-      const { name, description, userId, perguntas } = createQuestionarioDto;
-      const newQuestionario = await this.questionarioModel.create({
-        name,
-        description,
-        userId,
+    if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId) {
+      let newQuestionario = await this.questionarioModel.create({
+        name: createQuestionarioDto.name,
+        description: createQuestionarioDto.description,
+        userId: createQuestionarioDto.userId,
+        perguntas: createQuestionarioDto.perguntas
       });
 
-      for (const pergunta of perguntas) {
-        const createdPergunta = await this.perguntaModel.create({
-          title: pergunta.title,
-          questionarioId: newQuestionario.id,
-        });
-      }
-
-      //buscando questionario criado na base
-      let responseQuestionario = await this.questionarioModel.findByPk(newQuestionario.id,{
-        include: Pergunta
-      });
-      
       res.status(201).json({
         error: false,
-        questionario: responseQuestionario
-      });
-    } 
-    else {
-      res.status(400).json({
-        error: true,
-        message: 'Bad Request: name, description, userId, and perguntas are required fields',
-      });
+        newQuestionario
+      })
     }
   }
+
+  // async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
+  //   if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId && createQuestionarioDto.perguntas) {
+  //     const { name, description, userId, perguntas } = createQuestionarioDto;
+  //     const newQuestionario = await this.questionarioModel.create({
+  //       name,
+  //       description,
+  //       userId,
+  //     });
+
+  //     for (const pergunta of perguntas) {
+  //       const createdPergunta = await this.perguntaModel.create({
+  //         title: pergunta.title,
+  //         questionarioId: newQuestionario.id,
+  //       });
+  //     }
+
+  //     //buscando questionario criado na base
+  //     let responseQuestionario = await this.questionarioModel.findByPk(newQuestionario.id,{
+  //       include: Pergunta
+  //     });
+      
+  //     res.status(201).json({
+  //       error: false,
+  //       questionario: responseQuestionario
+  //     });
+  //   } 
+  //   else {
+  //     res.status(400).json({
+  //       error: true,
+  //       message: 'Bad Request: name, description, userId, and perguntas are required fields',
+  //     });
+  //   }
+  // }
   
 
   async findAll(page: number = 1): Promise<Questionario[]> {
@@ -72,9 +70,13 @@ export class QuestionariosService {
     const offset = (page - 1) * limit;
 
     return this.questionarioModel.findAll({
+      // attributes:['id', 'name', 'description', 'perguntas'],
       offset,
       limit,
-      include: Pergunta
+      // include: {
+      //   model: User,
+      //   attributes:['id', 'nome', 'cpf', 'email']
+      // }
     })
 
     // return this.questionarioModel.findAll({
@@ -87,7 +89,7 @@ export class QuestionariosService {
 
   async findOne(id: number, @Res() res) {
     let questionario = await this.questionarioModel.findByPk(id,{
-      include: Pergunta
+      // include: Pergunta
     });
 
     if (!questionario) {

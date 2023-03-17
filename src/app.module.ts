@@ -9,8 +9,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth-guard';
 import { APP_GUARD } from '@nestjs/core';
 import { QuestionariosModule } from './questionarios/questionarios.module';
 import { Questionario } from './questionarios/entities/questionario.entity';
-import { PerguntasModule } from './perguntas/perguntas.module';
-import { Pergunta } from './perguntas/entities/pergunta.entity';
 
 @Module({
   imports: [
@@ -23,12 +21,11 @@ import { Pergunta } from './perguntas/entities/pergunta.entity';
       database: 'desafio_ancar',
       autoLoadModels: true,
       synchronize: true,
-      models: [User, Questionario, Pergunta],
+      models: [User, Questionario],
     }),
     UsersModule,
     AuthModule,
     QuestionariosModule,
-    PerguntasModule
   ],
   controllers: [AppController],
   providers: [AppService, {
