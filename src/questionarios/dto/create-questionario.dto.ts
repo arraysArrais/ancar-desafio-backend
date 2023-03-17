@@ -35,7 +35,7 @@ export class CreateQuestionarioDto {
 
     @ApiProperty({
         description: 'Descrição do formulário',
-        example: 'Das lojas abaixo, quais você gostaria de trazer para o Shopping Nova América?'
+        example: 'Pesquisa de Satisfação do Shopping Nova América'
     })
     @Length(4,120)
     @IsString()
@@ -52,7 +52,7 @@ export class CreateQuestionarioDto {
 
     @ApiProperty({
         // type: ()=>[CreatePerguntaDto],
-        example:[{title:'Renner'}, {title:'Polo Wear'}, {title:'Brownieria'}]
+        example:[{title:'Você recomendaria o Shopping a algum familiar?'}, {title:'Qual loja mais gostaria de trazer para o Shopping?'}, {title:'Nosso estacionamento lhe atende?'}]
     })
     @IsDefined()
     @IsArray()

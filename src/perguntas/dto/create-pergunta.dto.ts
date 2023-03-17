@@ -20,7 +20,7 @@ export class CreatePerguntaDto {
     
     @ApiProperty({
         description: 'Título da pergunta',
-        example: 'Seu nome'
+        example: 'Você recomendaria o Shopping a algum amigo/familiar?'
     })
     @Length(4,30)
     @IsString()
