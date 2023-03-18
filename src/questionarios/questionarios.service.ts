@@ -169,68 +169,6 @@ export class QuestionariosService {
     });
   }
 
-  // async update(id: number, updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
-  //   let questionario = await this.questionarioModel.findByPk(id, {
-  //     include:Pergunta
-  //   });
-
-  //   if (!questionario) {
-  //     return res.status(404).json({
-  //       ...this.appService.resourceNotFoundResponse('questionario')
-  //     });
-  //   }
-
-  //   if (updateQuestionarioDto.name == null) {
-  //     updateQuestionarioDto.name = questionario.name;
-  //   }
-
-  //   if (updateQuestionarioDto.description == null) {
-  //     updateQuestionarioDto.description = questionario.description;
-  //   }
-
-  //   let perguntasRequest = updateQuestionarioDto.perguntas;
-
-  //   const promises = perguntasRequest.map(async (e) => {
-  //     let perguntaToUpdate = await this.perguntaModel.findOne({
-  //       where: {
-  //         id: e.id,
-  //         questionarioId: questionario.id
-  //       }
-  //     });
-
-  //     if (perguntaToUpdate == null || perguntaToUpdate == undefined) {
-  //       return res.status(400).json({
-  //         error: true,
-  //         msg: `id de pergunta fornecido não foi encontrado para este questionario ou não existe`
-  //       })
-  //     }
-
-  //     await perguntaToUpdate.update({
-  //       title: e.title
-  //     });
-  //   });
-
-  //   // Wait for all pergunta updates to complete before updating the questionario
-  //   await Promise.all(promises);
-
-  //   questionario = await this.questionarioModel.findByPk(id, {
-  //     include: Pergunta
-  //   });
-
-  //   await questionario.update({
-  //     name: updateQuestionarioDto.name,
-  //     description: updateQuestionarioDto.description,
-  //   });
-
-  //   return res.json({
-  //     error: false,
-  //     questionario
-  //   });
-  // }
-
-
-
-
   async remove(id: number, @Res() res) {
     let questionario = await this.questionarioModel.findByPk(id);
 
