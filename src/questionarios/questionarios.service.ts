@@ -17,21 +17,6 @@ export class QuestionariosService {
     private readonly perguntaModel: typeof Pergunta,
   ) { }
 
-  // async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
-  //   if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId) {
-  //     let newQuestionario = await this.questionarioModel.create({
-  //       name: createQuestionarioDto.name,
-  //       description: createQuestionarioDto.description,
-  //       userId: createQuestionarioDto.userId,
-  //     });
-
-  //     res.status(201).json({
-  //       error: false,
-  //       newQuestionario
-  //     })
-  //   }
-  // }
-
   async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
     if (createQuestionarioDto.name && createQuestionarioDto.description && createQuestionarioDto.userId && createQuestionarioDto.perguntas) {
       const { name, description, userId, perguntas } = createQuestionarioDto;
@@ -76,13 +61,6 @@ export class QuestionariosService {
       limit,
       include: Pergunta
     })
-
-    // return this.questionarioModel.findAll({
-    //   attributes:['id', 'name', 'description', 'createdAt', 'updatedAt'],
-    //   offset,
-    //   limit,
-    //   include: User
-    // });
   }
 
   async findOne(id: number, @Res() res) {
