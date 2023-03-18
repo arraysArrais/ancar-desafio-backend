@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import {validate,
+import {
+    validate,
     validateOrReject,
     Contains,
     IsInt,
@@ -15,15 +16,18 @@ import {validate,
     MinLength,
     MaxLength,
     Validate,
-    IsDefined,} from 'class-validator';
+    IsDefined,
+    IsArray
+} from 'class-validator';
+import { UpdatePerguntaDto } from 'src/perguntas/dto/update-pergunta.dto';
 import { CreateQuestionarioDto } from './create-questionario.dto';
 
-export class UpdateQuestionarioDto extends PartialType(CreateQuestionarioDto) {
+export class UpdateQuestionarioDto {
     @ApiProperty({
         description: 'Utilizado para representar o nome do questionário',
         example: 'NPS - SNA'
     })
-    @Length(4,30)
+    @Length(4, 30)
     @IsString()
     @IsDefined()
     name: string;
@@ -33,8 +37,29 @@ export class UpdateQuestionarioDto extends PartialType(CreateQuestionarioDto) {
         description: 'Descrição do formulário',
         example: 'Qual loja você gostaria de trazer para o Shopping Nova América?'
     })
-    @Length(4,120)
+    @Length(4, 120)
     @IsString()
     @IsDefined()
     description: string;
+
+    @ApiProperty({
+        example: 
+    [
+        {
+            id: 1,
+            title: 'Você recomendaria o Shopping a algum familiar?'
+        }, 
+        {
+            id: 2,
+            title: 'Qual loja mais gostaria de trazer para o Shopping?'
+        }, 
+        {
+            id: 3,
+            title: 'Nosso estacionamento lhe atende?'
+        }
+    ]
+    })
+    @IsDefined()
+    @IsArray()
+    perguntas: UpdatePerguntaDto[];
 }

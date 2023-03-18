@@ -17,6 +17,8 @@ import {validate,
     IsDefined,} from 'class-validator';
 
 export class CreatePerguntaDto {
+
+    id: number;
     
     @ApiProperty({
         description: 'Título da pergunta',

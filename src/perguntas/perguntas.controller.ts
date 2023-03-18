@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PerguntasService } from './perguntas.service';
 import { CreatePerguntaDto } from './dto/create-pergunta.dto';
 import { UpdatePerguntaDto } from './dto/update-pergunta.dto';
-import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeController, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('perguntas')
-@ApiBearerAuth()
+// @ApiTags('perguntas')
+// @ApiBearerAuth()
+@ApiExcludeController()
 @Controller('perguntas')
 export class PerguntasController {
   constructor(private readonly perguntasService: PerguntasService) {}

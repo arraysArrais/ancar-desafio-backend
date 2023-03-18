@@ -42,22 +42,22 @@ export class QuestionariosService {
       });
 
       for (const pergunta of perguntas) {
-        const createdPergunta = await this.perguntaModel.create({
+        await this.perguntaModel.create({
           title: pergunta.title,
           questionarioId: newQuestionario.id,
         });
       }
 
       //buscando questionario criado na base
-      let responseQuestionario = await this.questionarioModel.findByPk(newQuestionario.id,{
+      let responseQuestionario = await this.questionarioModel.findByPk(newQuestionario.id, {
         include: Pergunta
       });
-      
+
       res.status(201).json({
         error: false,
         questionario: responseQuestionario
       });
-    } 
+    }
     else {
       res.status(400).json({
         error: true,
@@ -65,7 +65,7 @@ export class QuestionariosService {
       });
     }
   }
-  
+
 
   async findAll(page: number = 1): Promise<Questionario[]> {
     const limit = 10;
@@ -86,27 +86,29 @@ export class QuestionariosService {
   }
 
   async findOne(id: number, @Res() res) {
-    let questionario = await this.questionarioModel.findByPk(id,{
+    let questionario = await this.questionarioModel.findByPk(id, {
       include: Pergunta
     });
 
     if (!questionario) {
-       res.status(404).json({
+      res.status(404).json({
         ...this.appService.resourceNotFoundResponse('questionario')
       });
     }
 
-    else{
+    else {
       res.json({
         error: false,
         questionario
       })
     }
-    
+
   }
 
   async update(id: number, updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
-    let questionario = await this.questionarioModel.findByPk(id);
+    let questionario = await this.questionarioModel.findByPk(id, {
+      include: Pergunta,
+    });
 
     if (!questionario) {
       //parando a execução para não dar erro no console ao tentar mandar a response novamente
@@ -123,16 +125,111 @@ export class QuestionariosService {
       updateQuestionarioDto.description = questionario.description;
     }
 
-    questionario.update({
+    let perguntasRequest = updateQuestionarioDto.perguntas;
+    // console.log(perguntasRequest);
+
+    // recebendo o payload de perguntas enviado pela request e percorrendo cada elemento
+    // buscando cada pergunta no banco pelo id enviado na request e atualizando o titulo de acordo com o valor enviado na request
+    const promises = perguntasRequest.map(async (e) => {
+      let perguntaToUpdate = await this.perguntaModel.findOne({
+        where: {
+          id: e.id,
+          questionarioId: questionario.id
+        }
+      });
+      // console.log("ENTREI AQUI!!!");
+      // console.log(perguntaToUpdate);
+
+      if (perguntaToUpdate == null || perguntaToUpdate == undefined) {
+        return res.status(400).json({
+          error: true,
+          msg: `id de pergunta fornecido não foi encontrado para este questionario ou não existe`
+        })
+      }
+
+      await perguntaToUpdate.update({
+        title: e.title
+      });
+    });
+
+    await Promise.all(promises);
+
+    await questionario.update({
       name: updateQuestionarioDto.name,
       description: updateQuestionarioDto.description,
     });
 
-    res.json({
+    questionario = await this.questionarioModel.findByPk(id, {
+      include: Pergunta
+    })
+
+    return await res.json({
       error: false,
       questionario
     });
   }
+
+  // async update(id: number, updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
+  //   let questionario = await this.questionarioModel.findByPk(id, {
+  //     include:Pergunta
+  //   });
+
+  //   if (!questionario) {
+  //     return res.status(404).json({
+  //       ...this.appService.resourceNotFoundResponse('questionario')
+  //     });
+  //   }
+
+  //   if (updateQuestionarioDto.name == null) {
+  //     updateQuestionarioDto.name = questionario.name;
+  //   }
+
+  //   if (updateQuestionarioDto.description == null) {
+  //     updateQuestionarioDto.description = questionario.description;
+  //   }
+
+  //   let perguntasRequest = updateQuestionarioDto.perguntas;
+
+  //   const promises = perguntasRequest.map(async (e) => {
+  //     let perguntaToUpdate = await this.perguntaModel.findOne({
+  //       where: {
+  //         id: e.id,
+  //         questionarioId: questionario.id
+  //       }
+  //     });
+
+  //     if (perguntaToUpdate == null || perguntaToUpdate == undefined) {
+  //       return res.status(400).json({
+  //         error: true,
+  //         msg: `id de pergunta fornecido não foi encontrado para este questionario ou não existe`
+  //       })
+  //     }
+
+  //     await perguntaToUpdate.update({
+  //       title: e.title
+  //     });
+  //   });
+
+  //   // Wait for all pergunta updates to complete before updating the questionario
+  //   await Promise.all(promises);
+
+  //   questionario = await this.questionarioModel.findByPk(id, {
+  //     include: Pergunta
+  //   });
+
+  //   await questionario.update({
+  //     name: updateQuestionarioDto.name,
+  //     description: updateQuestionarioDto.description,
+  //   });
+
+  //   return res.json({
+  //     error: false,
+  //     questionario
+  //   });
+  // }
+
+
+
 
   async remove(id: number, @Res() res) {
     let questionario = await this.questionarioModel.findByPk(id);
