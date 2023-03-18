@@ -180,7 +180,7 @@ export class QuestionariosService {
 
     else {
       questionario.destroy();
-      res.status(404).json({
+      res.status.json({
         error: false,
         msg: `questionario id ${id} deleted`
       });

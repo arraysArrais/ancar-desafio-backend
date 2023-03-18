@@ -32,6 +32,8 @@ export class Questionario extends Model {
     @BelongsTo(() => User)
     user: User;
 
-    @HasMany(() => Pergunta)
+    @HasMany(() => Pergunta, {
+        onDelete: 'CASCADE'
+    })
     perguntas: Pergunta[];
 }
