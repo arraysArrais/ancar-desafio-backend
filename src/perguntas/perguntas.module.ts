@@ -3,6 +3,7 @@ import { PerguntasService } from './perguntas.service';
 import { PerguntasController } from './perguntas.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Pergunta } from './entities/pergunta.entity';
+import { Resposta } from 'src/respostas/entities/resposta.entity';
 
 @Module({
   imports:
@@ -10,6 +11,7 @@ import { Pergunta } from './entities/pergunta.entity';
       SequelizeModule.forFeature(
         [
           Pergunta,
+          Resposta
         ]
       ),
     ],

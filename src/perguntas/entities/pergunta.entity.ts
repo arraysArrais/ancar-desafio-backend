@@ -1,5 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table, HasMany } from "sequelize-typescript";
 import { Questionario } from 'src/questionarios/entities/questionario.entity';
+import { Resposta } from "src/respostas/entities/resposta.entity";
 
 @Table({
     tableName: 'pergunta'
@@ -25,4 +26,9 @@ export class Pergunta extends Model{
 
     @BelongsTo(() => Questionario)
     questionario: Questionario;
+
+    @HasMany(() => Resposta, {
+        onDelete: 'CASCADE'
+    })
+    respostas: Resposta[];
 }

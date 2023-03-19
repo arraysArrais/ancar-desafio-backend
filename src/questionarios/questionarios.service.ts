@@ -56,11 +56,10 @@ export class QuestionariosService {
     const limit = 10;
     const offset = (page - 1) * limit;
 
-    return this.questionarioModel.findAll({
+    return this.questionarioModel.scope('withPerguntas').findAll({
       offset,
       limit,
-      include: Pergunta
-    })
+    });
   }
 
   async findOne(id: number, @Res() res) {

@@ -11,6 +11,8 @@ import { QuestionariosModule } from './questionarios/questionarios.module';
 import { Questionario } from './questionarios/entities/questionario.entity';
 import { PerguntasModule } from './perguntas/perguntas.module';
 import { Pergunta } from './perguntas/entities/pergunta.entity';
+import { RespostasModule } from './respostas/respostas.module';
+import { Resposta } from './respostas/entities/resposta.entity';
 
 @Module({
   imports: [
@@ -23,12 +25,13 @@ import { Pergunta } from './perguntas/entities/pergunta.entity';
       database: 'desafio_ancar',
       autoLoadModels: true,
       synchronize: true,
-      models: [User, Questionario, Pergunta],
+      models: [User, Questionario, Pergunta, Resposta],
     }),
     UsersModule,
     AuthModule,
     QuestionariosModule,
-    PerguntasModule
+    PerguntasModule,
+    RespostasModule
   ],
   controllers: [AppController],
   providers: [AppService, {

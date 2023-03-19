@@ -1,6 +1,12 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Scopes, Table } from "sequelize-typescript";
 import { Pergunta } from "src/perguntas/entities/pergunta.entity";
 import { User } from "src/users/entities/user.entity";
+
+@Scopes(()=>({
+    withPerguntas:{
+        include: [Pergunta]
+    }
+}))
 
 @Table({
     tableName: 'questionario'
