@@ -17,6 +17,7 @@ import {validate,
     Validate,
     IsDefined,
     IsArray,} from 'class-validator';
+import { ArrayUpdateResposta } from './arrayUpdateResposta.dto';
 
 export class TesteUpdateRespostaDto {
 
@@ -30,7 +31,7 @@ export class TesteUpdateRespostaDto {
 
     @ApiProperty({
         description: 'Nome da resposta',
-        example: 'Sim'
+        example: 'Sim!!'
     })
     @IsString()
     @IsDefined()

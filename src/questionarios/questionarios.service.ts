@@ -8,6 +8,8 @@ import { User } from 'src/users/entities/user.entity';
 import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
 import { Resposta } from 'src/respostas/entities/resposta.entity';
 import { UpdateQuestionarioRespostasDto } from './dto/update-questionario-respostas.dto';
+import { TesteUpdateRespostaDto } from 'src/respostas/dto/teste-update-resposta.dto';
+import { ArrayUpdateResposta } from 'src/respostas/dto/arrayUpdateResposta.dto';
 
 @Injectable()
 export class QuestionariosService {
@@ -157,7 +159,7 @@ export class QuestionariosService {
     for (const pergunta of questionario.perguntas) {
       for (const resposta of pergunta.respostas) {
         if (resposta.id === questionid) {
-          // console.log('PASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUI');
+          // console.log('PASSEI AQUI');
           await resposta.destroy();
         }
         else {
@@ -177,42 +179,35 @@ export class QuestionariosService {
     })
   }
 
-  async updateResposta(updateQuestionarioRespostasDto: UpdateQuestionarioRespostasDto, formid: number, questionid: number, @Res() res) {
+  async updateResposta(updateQuestionarioRespostasDto: ArrayUpdateResposta, formid: number, questionid: number, @Res() res) {
 
     let questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
     let pergunta = await this.perguntaModel.findByPk(questionid);
-    
-    console.log(pergunta);
 
-    if (!questionario) {
+    if (!questionario || !pergunta) {
       return res.status(404).json({
-        ...this.appService.resourceNotFoundResponse('questionario')
+        ...this.appService.resourceNotFoundResponse('questionario or pergunta')
       });
     }
 
-    if (updateQuestionarioRespostasDto.perguntas == null) {
-      updateQuestionarioRespostasDto.perguntas = questionario.perguntas
-    }
-
-    for (const pergunta of updateQuestionarioRespostasDto.perguntas) {
-      for (const resposta of pergunta.respostas) {
-        let respostaToUpdate = await this.respostaModel.findByPk(resposta.id)
-        if (respostaToUpdate == null || respostaToUpdate == undefined || respostaToUpdate.perguntaId !== pergunta.id) {
-          return res.status(404).json({
-            error: true,
-            msg: `id de resposta fornecido não está associado para esta pergunta ou não existe`
-          })
-        }
-        await respostaToUpdate.update({
-          name: resposta.name
-        });
+    for (const resposta of updateQuestionarioRespostasDto.respostas) {
+      let dbResposta = await this.respostaModel.findByPk(resposta.id);
+      if (dbResposta == null || dbResposta == undefined || dbResposta.perguntaId !== questionid || pergunta.questionarioId !== questionario.id) {
+        return res.status(404).json({
+          error: true,
+          msg: `id de resposta fornecido não está associado para esta pergunta, não existe ou id de questionario fornecido não está associado para esta pergunta`
+        })
       }
+      await dbResposta.update({
+        name:resposta.name
+      });
+
     }
 
     questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
 
     res.json({
-      error:false,
+      error: false,
       questionario
     })
 

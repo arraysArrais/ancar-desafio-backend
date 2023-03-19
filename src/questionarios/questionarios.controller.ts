@@ -5,6 +5,8 @@ import { CreateQuestionarioRespostasDto } from './dto/create-questionario-respos
 import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
 import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateQuestionarioRespostasDto } from './dto/update-questionario-respostas.dto';
+import { TesteUpdateRespostaDto } from 'src/respostas/dto/teste-update-resposta.dto';
+import { ArrayUpdateResposta } from 'src/respostas/dto/arrayUpdateResposta.dto';
 
 let teste :any= {
   teste:"oie"
@@ -53,7 +55,7 @@ export class QuestionariosController {
   }
 
   @Put(':formid/resposta/:questionid')
-  updateResposta(@Body() updateQuestionarioRespostasDto: UpdateQuestionarioRespostasDto, @Param('formid') formid: string, @Param('questionid') questionid: string, @Res() res){
+  updateResposta(@Body() updateQuestionarioRespostasDto: ArrayUpdateResposta, @Param('formid') formid: string, @Param('questionid') questionid: string, @Res() res){
     return this.questionariosService.updateResposta(updateQuestionarioRespostasDto, +formid, +questionid, res)
   }
 
