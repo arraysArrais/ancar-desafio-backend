@@ -58,14 +58,15 @@ export class QuestionariosService {
   }
 
 
-  async findAll(page: number = 1): Promise<Questionario[]> {
-    const limit = 10;
+  async findAll(page: number = 1, limit: number = 10): Promise<Questionario[]> {
+    // const limit = 10;
     const offset = (page - 1) * limit;
 
     return this.questionarioModel.findAll({
       offset,
       limit,
-      include: Pergunta.unscoped()
+      include: Pergunta.unscoped(),
+      order:['id']
     });
   }
 
@@ -89,21 +90,29 @@ export class QuestionariosService {
 
   }
 
-  async findOneWithRespostas(id: number, @Res() res) {
-    let questionario = await this.questionarioModel.findByPk(id, {
-      include: Pergunta
+  async findAllPerguntaWithResposta(page: number = 1, limit: number = 10, id: number, @Res() res): Promise<Pergunta[]> {
+    // const limits = limit;
+    const offset = (page - 1) * limit;
+
+    let perguntas = await this.perguntaModel.findAll({
+      offset,
+      limit,
+      where:{
+        questionarioId:id
+      },
+      order:['id']
     });
 
-    if (!questionario) {
-      res.status(404).json({
-        ...this.appService.resourceNotFoundResponse('questionario')
+    if (!perguntas) {
+      return res.status(404).json({
+        ...this.appService.resourceNotFoundResponse('pergunta')
       });
     }
 
     else {
-      res.json({
+      return res.json({
         error: false,
-        questionario
+        perguntas
       })
     }
   }

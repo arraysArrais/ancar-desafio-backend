@@ -30,9 +30,10 @@ export class QuestionariosController {
   @ApiResponse({ status: 200, description: 'All records has been successfully retrieved.'})
   @ApiResponse({ status: 500, description: 'Server error.'})
   @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @Get()
-  findAll(@Query('page') page: number = 1) {
-    return this.questionariosService.findAll(page);
+  findAll(@Query('page') page: number = 1,@Query('limit') limit: number = 10) {
+    return this.questionariosService.findAll(page, limit);
   }
 
   @ApiResponse({ status: 200, description: 'Record successfully retrieved.'})
@@ -43,9 +44,15 @@ export class QuestionariosController {
     return this.questionariosService.findOne(+id, res);
   }
 
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @Get(':id/respostas')
-  findOneWithRespostas(@Param('id') id: string, @Res() res) {
-    return this.questionariosService.findOneWithRespostas(+id, res);
+  findAllPerguntaWithResposta(
+    @Query('page') page: number = 1, 
+    @Query('limit') limit: number = 10, 
+    @Param('id') id: string, 
+    @Res() res) {
+    return this.questionariosService.findAllPerguntaWithResposta(page, limit, +id, res);
   }
 
 
