@@ -18,7 +18,7 @@ import {validate,
     IsDefined,
     IsArray,} from 'class-validator';
 
-export class UpdateRespostaDto {
+export class TesteUpdateRespostaDto {
 
     @ApiProperty({
         description: 'Id da resposta',

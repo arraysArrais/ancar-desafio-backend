@@ -17,8 +17,9 @@ import {validate,
     IsDefined,
     IsArray} from 'class-validator';
 import { CreateRespostaDto } from 'src/respostas/dto/create-resposta.dto';
+import { UpdateRespostaDto } from 'src/respostas/dto/update-resposta.dto';
 
-export class CreatePerguntaRespostaDto {
+export class UpdatePerguntaRespostaDto {
 
     @ApiProperty({
         description: 'Id da Pergunta',
@@ -48,18 +49,20 @@ export class CreatePerguntaRespostaDto {
         description: 'Respostas da pergunta em questão',
         example:[
         {
+            id:1,
             name:'Sim, recomendaria!'
         }, 
         {
+            id:1,
             name:'Não recomendaria'
         }, 
         {
-
+            id:1,
             name:'Talvez'
         }
     ]
     })
     @IsDefined()
     @IsArray()
-    respostas: CreateRespostaDto[];
+    respostas: UpdateRespostaDto[];
 }

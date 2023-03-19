@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query, Put } from '@nestjs/common';
 import { QuestionariosService } from './questionarios.service';
 import { CreateQuestionarioDto } from './dto/create-questionario.dto';
 import { CreateQuestionarioRespostasDto } from './dto/create-questionario-respostas.dto';
 import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
 import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateQuestionarioRespostasDto } from './dto/update-questionario-respostas.dto';
 
 let teste :any= {
   teste:"oie"
@@ -49,6 +50,16 @@ export class QuestionariosController {
   @Post(':id/respostas')
   createWithRespostas(@Param('id') id: string, @Body() createQuestionarioRespostasDto: CreateQuestionarioRespostasDto, @Res() res){
     return this.questionariosService.createWithRespostas(+id, createQuestionarioRespostasDto, res)
+  }
+
+  @Put(':formid/resposta/:questionid')
+  updateResposta(@Body() updateQuestionarioRespostasDto: UpdateQuestionarioRespostasDto, @Param('formid') formid: string, @Param('questionid') questionid: string, @Res() res){
+    return this.questionariosService.updateResposta(updateQuestionarioRespostasDto, +formid, +questionid, res)
+  }
+
+  @Delete(':formid/respostas/:questionid')
+  deleteRespostas(@Param('formid') formid: string, @Param('questionid') questionid: string, @Res() res){
+    return this.questionariosService.deleteRespostas(+formid, +questionid, res);
   }
 
   @ApiResponse({ status: 200, description: 'Record successfully updated.'})

@@ -7,6 +7,7 @@ import { AppService } from '../app.service';
 import { User } from 'src/users/entities/user.entity';
 import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
 import { Resposta } from 'src/respostas/entities/resposta.entity';
+import { UpdateQuestionarioRespostasDto } from './dto/update-questionario-respostas.dto';
 
 @Injectable()
 export class QuestionariosService {
@@ -111,6 +112,14 @@ export class QuestionariosService {
 
     for (const pergunta of perguntas) {
       let dbPergunta = await this.perguntaModel.findByPk(pergunta.id)
+
+      if (dbPergunta === null || dbPergunta === undefined) {
+        return res.status(400).json({
+          error: true,
+          msg: `id de pergunta fornecido não foi encontrado para este questionario ou não existe`
+        })
+      }
+
       if (dbPergunta.questionarioId !== id) {
         return res.status(400).json({
           error: true,
@@ -133,6 +142,80 @@ export class QuestionariosService {
       error: false,
       questionario
     });
+  }
+
+  async deleteRespostas(formid: number, questionid: number, @Res() res) {
+
+    let questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
+
+    if (!questionario) {
+      return res.status(404).json({
+        ...this.appService.resourceNotFoundResponse('questionario')
+      });
+    }
+
+    for (const pergunta of questionario.perguntas) {
+      for (const resposta of pergunta.respostas) {
+        if (resposta.id === questionid) {
+          // console.log('PASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUIPASSEI AQUI');
+          await resposta.destroy();
+        }
+        else {
+          return res.status(400).json({
+            error: true,
+            msg: `resposta id not associated with this questionario or not found`
+          })
+        }
+      }
+    }
+
+    questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
+
+    res.json({
+      error: false,
+      questionario
+    })
+  }
+
+  async updateResposta(updateQuestionarioRespostasDto: UpdateQuestionarioRespostasDto, formid: number, questionid: number, @Res() res) {
+
+    let questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
+    let pergunta = await this.perguntaModel.findByPk(questionid);
+    
+    console.log(pergunta);
+
+    if (!questionario) {
+      return res.status(404).json({
+        ...this.appService.resourceNotFoundResponse('questionario')
+      });
+    }
+
+    if (updateQuestionarioRespostasDto.perguntas == null) {
+      updateQuestionarioRespostasDto.perguntas = questionario.perguntas
+    }
+
+    for (const pergunta of updateQuestionarioRespostasDto.perguntas) {
+      for (const resposta of pergunta.respostas) {
+        let respostaToUpdate = await this.respostaModel.findByPk(resposta.id)
+        if (respostaToUpdate == null || respostaToUpdate == undefined || respostaToUpdate.perguntaId !== pergunta.id) {
+          return res.status(404).json({
+            error: true,
+            msg: `id de resposta fornecido não está associado para esta pergunta ou não existe`
+          })
+        }
+        await respostaToUpdate.update({
+          name: resposta.name
+        });
+      }
+    }
+
+    questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
+
+    res.json({
+      error:false,
+      questionario
+    })
+
   }
 
   async update(id: number, updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
