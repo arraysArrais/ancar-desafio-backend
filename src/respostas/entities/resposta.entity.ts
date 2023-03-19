@@ -1,6 +1,10 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Scopes, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, Model, Scopes, Table } from "sequelize-typescript";
 import { Pergunta } from "src/perguntas/entities/pergunta.entity";
 
+// @DefaultScope(() => ({
+//     attributes: ['id', 'name', 'perguntaId', 'createdAt', 'updatedAt'],
+//     include:Pergunta
+//   }))
 
 @Table({
     tableName: 'resposta'

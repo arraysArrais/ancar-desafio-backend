@@ -18,8 +18,12 @@ import {validate,
     IsArray} from 'class-validator';
 import { CreateRespostaDto } from 'src/respostas/dto/create-resposta.dto';
 
-export class CreatePerguntaDto {
+export class CreatePerguntaRespostaDto {
 
+    @ApiProperty({
+        description: 'Id da Pergunta',
+        example: 5
+    })
     id: number;
     
     @ApiProperty({

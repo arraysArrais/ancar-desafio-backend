@@ -6,6 +6,7 @@ import { Questionario } from './entities/questionario.entity';
 import { AppService } from '../app.service';
 import { User } from 'src/users/entities/user.entity';
 import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
+import { Resposta } from 'src/respostas/entities/resposta.entity';
 
 @Injectable()
 export class QuestionariosService {
@@ -15,6 +16,8 @@ export class QuestionariosService {
     private readonly appService: AppService,
     @InjectModel(Pergunta)
     private readonly perguntaModel: typeof Pergunta,
+    @InjectModel(Resposta)
+    private readonly respostaModel: typeof Resposta,
   ) { }
 
   async create(createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
@@ -35,7 +38,7 @@ export class QuestionariosService {
 
       //buscando questionario criado na base
       let responseQuestionario = await this.questionarioModel.findByPk(newQuestionario.id, {
-        include: Pergunta
+        include: Pergunta.unscoped()
       });
 
       res.status(201).json({
@@ -56,15 +59,16 @@ export class QuestionariosService {
     const limit = 10;
     const offset = (page - 1) * limit;
 
-    return this.questionarioModel.scope('withPerguntas').findAll({
+    return this.questionarioModel.findAll({
       offset,
       limit,
+      include: Pergunta.unscoped()
     });
   }
 
   async findOne(id: number, @Res() res) {
     let questionario = await this.questionarioModel.findByPk(id, {
-      include: Pergunta
+      include: Pergunta.unscoped()
     });
 
     if (!questionario) {
@@ -82,9 +86,58 @@ export class QuestionariosService {
 
   }
 
+  async findOneWithRespostas(id: number, @Res() res) {
+    let questionario = await this.questionarioModel.findByPk(id, {
+      include: Pergunta
+    });
+
+    if (!questionario) {
+      res.status(404).json({
+        ...this.appService.resourceNotFoundResponse('questionario')
+      });
+    }
+
+    else {
+      res.json({
+        error: false,
+        questionario
+      })
+    }
+  }
+
+  async createWithRespostas(id: number, createQuestionarioDto: CreateQuestionarioDto, @Res() res) {
+
+    let perguntas = createQuestionarioDto.perguntas;
+
+    for (const pergunta of perguntas) {
+      let dbPergunta = await this.perguntaModel.findByPk(pergunta.id)
+      if (dbPergunta.questionarioId !== id) {
+        return res.status(400).json({
+          error: true,
+          msg: `id de pergunta fornecido não foi encontrado para este questionario ou não existe`
+        })
+      }
+
+      for (const resposta of pergunta.respostas) {
+        await this.respostaModel.create({
+          name: resposta.name,
+          perguntaId: pergunta.id
+        });
+      }
+    }
+
+    let questionario = await this.questionarioModel.scope('withPerguntas').findByPk(id);
+
+
+    res.json({
+      error: false,
+      questionario
+    });
+  }
+
   async update(id: number, updateQuestionarioDto: UpdateQuestionarioDto, @Res() res) {
     let questionario = await this.questionarioModel.findByPk(id, {
-      include: Pergunta,
+      include: Pergunta.unscoped(),
     });
 
     if (!questionario) {
@@ -137,7 +190,7 @@ export class QuestionariosService {
     });
 
     questionario = await this.questionarioModel.findByPk(id, {
-      include: Pergunta
+      include: Pergunta.unscoped(),
     })
 
     return await res.json({

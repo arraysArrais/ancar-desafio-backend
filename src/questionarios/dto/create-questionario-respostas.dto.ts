@@ -19,9 +19,10 @@ import {validate,
     IsArray,} from 'class-validator';
 import { Type } from 'class-transformer';
 import { Pergunta } from 'src/perguntas/entities/pergunta.entity';
+import { CreatePerguntaRespostaDto } from 'src/perguntas/dto/create-pergunta-resposta.dto';
 
 
-export class CreateQuestionarioDto {
+export class CreateQuestionarioRespostasDto {
 
     @ApiProperty({
         description: 'Utilizado para representar o nome do questionário',
@@ -51,19 +52,36 @@ export class CreateQuestionarioDto {
     userId: number;
 
     @ApiProperty({
-        // type: ()=>[CreatePerguntaDto],
         example:[
-            {
+            {   
+                id: 5,
                 title:'Você recomendaria o Shopping a algum familiar?',
+                respostas: [
+                    { name: 'Sim, recomendaria!' },
+                    { name: 'Não recomendaria' },
+                    { name: 'Talvez' },
+                  ],
             }, 
             {
+                id: 6,
                 title:'Qual loja mais gostaria de trazer para o Shopping?',
+                respostas: [
+                    { name: 'Loja 1' },
+                    { name: 'Loja 2' },
+                    { name: 'Loja 3' },
+                  ],
             }, 
             {
+                id: 7,
                 title:'Nosso estacionamento lhe atende?',
+                respostas: [
+                    { name: 'Sim, atende bem' },
+                    { name: 'Não atende muito bem' },
+                    { name: 'Não atende bem' },
+                  ],
             }]
     })
     @IsDefined()
     @IsArray()
-    perguntas: CreatePerguntaDto[];
+    perguntas: CreatePerguntaRespostaDto[];
 }

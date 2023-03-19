@@ -1,8 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query } from '@nestjs/common';
 import { QuestionariosService } from './questionarios.service';
 import { CreateQuestionarioDto } from './dto/create-questionario.dto';
+import { CreateQuestionarioRespostasDto } from './dto/create-questionario-respostas.dto';
 import { UpdateQuestionarioDto } from './dto/update-questionario.dto';
-import { ApiBearerAuth, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+let teste :any= {
+  teste:"oie"
+}
 
 
 @ApiTags('questionarios')
@@ -33,6 +38,17 @@ export class QuestionariosController {
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res) {
     return this.questionariosService.findOne(+id, res);
+  }
+
+  @Get(':id/respostas')
+  findOneWithRespostas(@Param('id') id: string, @Res() res) {
+    return this.questionariosService.findOneWithRespostas(+id, res);
+  }
+
+
+  @Post(':id/respostas')
+  createWithRespostas(@Param('id') id: string, @Body() createQuestionarioRespostasDto: CreateQuestionarioRespostasDto, @Res() res){
+    return this.questionariosService.createWithRespostas(+id, createQuestionarioRespostasDto, res)
   }
 
   @ApiResponse({ status: 200, description: 'Record successfully updated.'})
