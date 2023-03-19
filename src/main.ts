@@ -20,8 +20,8 @@ async function bootstrap() {
   // await sequelize.sync({ force: true });
 
   const config = new DocumentBuilder()
-    .setTitle('Desafio Ancar')
-    .setDescription('APIs para o backend do desafio Ancar')
+    .setTitle('API - Desafio Ancar')
+    .setDescription('Serviços Desafio Ancar - João Mesquita')
     .setVersion('1.0')
     // .addTag('teste')
     .addBearerAuth()
