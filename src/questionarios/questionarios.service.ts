@@ -206,7 +206,7 @@ export class QuestionariosService {
     for (const resposta of updateQuestionarioRespostasDto.respostas) {
       let dbResposta = await this.respostaModel.findByPk(resposta.id);
       if (dbResposta == null || dbResposta == undefined || dbResposta.perguntaId !== questionid || pergunta.questionarioId !== questionario.id) {
-        return res.status(404).json({
+        return res.status(400).json({
           error: true,
           msg: `id de resposta fornecido não está associado para esta pergunta, não existe ou id de questionario fornecido não está associado para esta pergunta`
         })
