@@ -66,9 +66,9 @@ export class QuestionariosController {
     return this.questionariosService.updateResposta(updateQuestionarioRespostasDto, +formid, +questionid, res)
   }
 
-  @Delete(':formid/respostas/:questionid')
-  deleteRespostas(@Param('formid') formid: string, @Param('questionid') questionid: string, @Res() res){
-    return this.questionariosService.deleteRespostas(+formid, +questionid, res);
+  @Delete(':formid/respostas/:answerid')
+  deleteRespostas(@Param('formid') formid: string, @Param('answerid') answerid: string, @Res() res){
+    return this.questionariosService.deleteRespostas(+formid, +answerid, res);
   }
 
   @ApiResponse({ status: 200, description: 'Record successfully updated.'})

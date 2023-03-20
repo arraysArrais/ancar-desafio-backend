@@ -66,7 +66,7 @@ export class QuestionariosService {
       offset,
       limit,
       include: Pergunta.unscoped(),
-      order:['id']
+      order: ['id']
     });
   }
 
@@ -97,10 +97,10 @@ export class QuestionariosService {
     let perguntas = await this.perguntaModel.findAll({
       offset,
       limit,
-      where:{
-        questionarioId:id
+      where: {
+        questionarioId: id
       },
-      order:['id']
+      order: ['id']
     });
 
     if (!perguntas) {
@@ -155,29 +155,33 @@ export class QuestionariosService {
     });
   }
 
-  async deleteRespostas(formid: number, questionid: number, @Res() res) {
+  async deleteRespostas(formid: number, answerid: number, @Res() res) {
 
     let questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
+    let resposta = await this.respostaModel.findByPk(answerid);
 
-    if (!questionario) {
+
+    if (!questionario || !resposta) {
       return res.status(404).json({
-        ...this.appService.resourceNotFoundResponse('questionario')
+        ...this.appService.resourceNotFoundResponse('questionario or resposta record not found')
       });
     }
 
-    for (const pergunta of questionario.perguntas) {
-      for (const resposta of pergunta.respostas) {
-        if (resposta.id === questionid) {
-          // console.log('PASSEI AQUI');
-          await resposta.destroy();
-        }
-        else {
-          return res.status(400).json({
-            error: true,
-            msg: `resposta id not associated with this questionario or not found`
-          })
-        }
-      }
+    let pergunta = await this.perguntaModel.findByPk(resposta.perguntaId);
+    if (!pergunta) {
+      return res.status(404).json({
+        ...this.appService.resourceNotFoundResponse('questionario or resposta record not found')
+      });
+    }
+
+    if (pergunta.questionarioId === questionario.id) {
+      await resposta.destroy();
+    }
+    else {
+      return res.status(400).json({
+        error: true,
+        msg: `resposta id not associated with this questionario or not found`
+      })
     }
 
     questionario = await this.questionarioModel.scope('withPerguntas').findByPk(formid);
@@ -208,7 +212,7 @@ export class QuestionariosService {
         })
       }
       await dbResposta.update({
-        name:resposta.name
+        name: resposta.name
       });
 
     }
