@@ -32,7 +32,7 @@ $ npm install
 $ npm run start:dev
 
 # Run Seeders
-$ npx run seed
+$ npm run seed
 
 ```
 
